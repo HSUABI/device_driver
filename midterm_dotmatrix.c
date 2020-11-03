@@ -4,7 +4,7 @@
 #include <linux/uaccess.h>	// needed user space copy functions
 #include <linux/fs.h>		// needed file operations
 #include <linux/miscdevice.h>	// needed by misc device driver functions
-
+#include <linux/delay.h>
 
 #define DRIVER_AUTHOR	"CAUSW song"
 #define DRIVER_DESC	"driver for midterm_dotmatrix"
@@ -41,6 +41,12 @@ unsigned char dotm_fontmap_name[10][10] = {
     {0x00,0x22,0x72,0x56,0x52,0x02,0x08,0x14,0x14,0x08}, // 성
     {0x08,0x14,0x14,0x08,0x00,0x3E,0x08,0x1C,0x04,0x04}, // 욱
 };
+unsigned char dotm_fontmap_full_name[] = {
+    0x08,0x14,0x22,0x08,0x7F,0x00,0x08,0x14,0x14,0x08,  // 송
+    0x00,0x22,0x72,0x56,0x52,0x02,0x08,0x14,0x14,0x08,  // 성
+    0x08,0x14,0x14,0x08,0x00,0x3E,0x08,0x1C,0x04,0x04   // 욱
+};
+
 unsigned char dotm_fontmap_decimal[10][10] = {
     {0x3e,0x7f ,0x63,0x73,0x73, 0x6f ,0x67,0x63,0x7f,0x3e}, // 0
     {0x0c ,0x1c,0x1c,0x0c ,0x0c,0xc ,0x0c,0x0c,0x0c,0x1e}, // 1
@@ -117,49 +123,66 @@ static long dotm_ioctl(struct file *pinode, unsigned int cmd, unsigned long data
     unsigned short wordvalue;
 
     switch(cmd){
+
     case DOTM_SET_ALL:
         for(i=0;i<10;i++){
             wordvalue = dotm_fontmap_full[i] & 0x7F;
             iom_fpga_itf_write((unsigned int) DOTM_ADDR+(i*2), wordvalue);
         }
         break;
+
     case DOTM_SET_CLEAR:
         for(i=0;i<10;i++){
             wordvalue = dotm_fontmap_empty[i] & 0x7F;
             iom_fpga_itf_write((unsigned int) DOTM_ADDR+(i*2), wordvalue);
         }
         break;
+
     case DOTM_SET_ONE:
-        for(j=0;j<7;j++){ // j for loop is just for repeat-printing
+        for(j=0;j<7;j++){ // j for-loop is just for repeat-printing
             for(i=0;i<10;i++){
                 wordvalue = dotm_fontmap_name[0][i] & 0x7F;
                 iom_fpga_itf_write((unsigned int) DOTM_ADDR+(i*2), wordvalue);
             }
         }
         break;
+
     case DOTM_SET_TWO:
-        for(j=0;j<7;j++){ // j for loop is just for repeat-printing
+        for(j=0;j<7;j++){ // j for-loop is just for repeat-printing
             for(i=0;i<10;i++){
                 wordvalue = dotm_fontmap_name[1][i] & 0x7F;
                 iom_fpga_itf_write((unsigned int) DOTM_ADDR+(i*2), wordvalue);
             }
         }
         break;
+
     case DOTM_SET_THREE:
-        for(j=0;j<7;j++){ // j for loop is just for repeat-printing
+        for(j=0;j<7;j++){ // j for-loop is just for repeat-printing
             for(i=0;i<10;i++){
                 wordvalue = dotm_fontmap_name[2][i] & 0x7F;
                 iom_fpga_itf_write((unsigned int) DOTM_ADDR+(i*2), wordvalue);
             }
         }
         break;
+
     case DOTM_SET_FOUR:
         donothing = 1;
         break;
+
     case DOTM_SET_FIVE:
         donothing = 1;
         break;
 
+    case DOTM_SET_SIX:
+        for (i = 0; i < 21; i++){
+            for(j = 0; j<10; j++){
+                wordvalue = dotm_fontmap_full_name[i+j] & 0x7F;
+                iom_fpga_itf_write((unsigned int) DOTM_ADDR+(j*2), wordvalue);
+            }
+            mdelay(200);  
+        }
+        
+        break;
     }
     
 

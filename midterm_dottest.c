@@ -47,9 +47,10 @@ int main(int argc, char **argv)
     printf("input value : %d\n",num);
     if(fd!=-1){
 
-        ioctl(fd,DOTM_SET_ALL,NULL);
+        //ioctl(fd,DOTM_SET_ALL,NULL);
+        //usleep(500000);
+        ioctl(fd, DOTM_SET_CLEAR,NULL);
         usleep(500000);
-
         switch (num){
         case 0:
             ioctl(fd,DOTM_SET_ONE,NULL);
@@ -66,6 +67,10 @@ int main(int argc, char **argv)
         case 4:
             print_id(&fd);
             break;
+        case 5:
+            ioctl(fd,DOTM_SET_SIX,NULL);
+            break;
+            usleep(500000);
         default:
             break;
         }
