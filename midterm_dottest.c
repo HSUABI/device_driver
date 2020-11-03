@@ -70,15 +70,19 @@ int main(int argc, char **argv)
         case 5:
             ioctl(fd,DOTM_SET_SIX,NULL);
             break;
-            usleep(500000);
+
+        case 6:
+            ioctl(fd,DOTM_SET_SEVEN,NULL);
+            break;
+
         case 8:
             ioctl(fd,DOTM_SET_NINE,NULL);
             break;
-            usleep(500000);
         default:
             break;
         }
 
+        usleep(500000);
         ioctl(fd, DOTM_SET_CLEAR,NULL);
         usleep(500000);
         
