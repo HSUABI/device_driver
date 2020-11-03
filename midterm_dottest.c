@@ -71,6 +71,10 @@ int main(int argc, char **argv)
             ioctl(fd,DOTM_SET_SIX,NULL);
             break;
             usleep(500000);
+        case 8:
+            ioctl(fd,DOTM_SET_NINE,NULL);
+            break;
+            usleep(500000);
         default:
             break;
         }
