@@ -144,6 +144,14 @@ static long dotm_ioctl(struct file *pinode, unsigned int cmd, unsigned long data
             }
         }
         break;
+    case DOTM_SET_THREE:
+        for(j=0;j<7;j++){ // j for loop is just for repeat-printing
+            for(i=0;i<10;i++){
+                wordvalue = dotm_fontmap_name[2][i] & 0x7F;
+                iom_fpga_itf_write((unsigned int) DOTM_ADDR+(i*2), wordvalue);
+            }
+        }
+        break;
     }
 
     return 0;
