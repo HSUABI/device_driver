@@ -209,6 +209,16 @@ static long dotm_ioctl(struct file *pinode, unsigned int cmd, unsigned long data
         }
         break;
 
+    case DOTM_SET_EIGHT:
+        for (i = 12; i >=0 ; i--){
+            for(j = 0; j<10; j++){
+                wordvalue = dotm_fontmap_left_right_name[i][j] & 0x7F;
+                iom_fpga_itf_write((unsigned int) DOTM_ADDR+(j*2), wordvalue);
+            }
+            mdelay(200);  
+        }
+        break;
+
     case DOTM_SET_NINE:
         for (i = 20; i >= 0; i--){
             for(j = 0; j<10; j++){

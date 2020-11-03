@@ -75,6 +75,10 @@ int main(int argc, char **argv)
             ioctl(fd,DOTM_SET_SEVEN,NULL);
             break;
 
+        case 7:
+            ioctl(fd,DOTM_SET_EIGHT,NULL);
+            break;
+
         case 8:
             ioctl(fd,DOTM_SET_NINE,NULL);
             break;
