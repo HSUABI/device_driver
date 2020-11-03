@@ -156,7 +156,12 @@ static long dotm_ioctl(struct file *pinode, unsigned int cmd, unsigned long data
     case DOTM_SET_FOUR:
         donothing = 1;
         break;
+    case DOTM_SET_FIVE:
+        donothing = 1;
+        break;
+
     }
+    
 
     return 0;
 }

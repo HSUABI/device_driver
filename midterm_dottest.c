@@ -23,9 +23,14 @@
 
 
 void print_name();
+void print_id();
+
+int id[]={2,0,1,7,4,1,0,7};
+
 int main(int argc, char **argv)
 {
     int fd, num, i;
+    
 
     if(argc <=1){
         fprintf(stderr, PROGRAM_USAGE_STRING, argv[0]);
@@ -58,6 +63,9 @@ int main(int argc, char **argv)
         case 3:
             print_name(&fd);
             break;
+        case 4:
+            print_id(&fd);
+            break;
         default:
             break;
         }
@@ -82,4 +90,14 @@ void print_name(int *fd)
     usleep(500000);
     ioctl(*fd,DOTM_SET_THREE,NULL);
     usleep(500000);
+}
+
+void print_id(int *fd)
+{
+    int i;
+
+    for(i=0; i<8; i++){
+        write(*fd, &id[i], sizeof(id[i]));
+        usleep(500000);
+    }
 }
