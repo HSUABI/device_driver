@@ -113,6 +113,7 @@ static long dotm_ioctl(struct file *pinode, unsigned int cmd, unsigned long data
 {
     int i;
     int j;
+    int donothing;
     unsigned short wordvalue;
 
     switch(cmd){
@@ -151,6 +152,9 @@ static long dotm_ioctl(struct file *pinode, unsigned int cmd, unsigned long data
                 iom_fpga_itf_write((unsigned int) DOTM_ADDR+(i*2), wordvalue);
             }
         }
+        break;
+    case DOTM_SET_FOUR:
+        donothing = 1;
         break;
     }
 

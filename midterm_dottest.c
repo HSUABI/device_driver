@@ -22,7 +22,7 @@
 #define DOTM_SET_NINE       _IOW(DOTM_MAGIC, 10, int)
 
 
-
+void print_name();
 int main(int argc, char **argv)
 {
     int fd, num, i;
@@ -55,6 +55,9 @@ int main(int argc, char **argv)
         case 2:
             ioctl(fd,DOTM_SET_THREE,NULL);
             break;
+        case 3:
+            print_name(&fd);
+            break;
         default:
             break;
         }
@@ -69,4 +72,14 @@ int main(int argc, char **argv)
     }
 
     return 0;
+}
+
+void print_name(int *fd)
+{
+    ioctl(*fd,DOTM_SET_ONE,NULL);
+    usleep(500000);
+    ioctl(*fd,DOTM_SET_TWO,NULL);
+    usleep(500000);
+    ioctl(*fd,DOTM_SET_THREE,NULL);
+    usleep(500000);
 }
