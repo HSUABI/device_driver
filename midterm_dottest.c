@@ -30,66 +30,54 @@ int id[]={2,0,1,7,4,1,0,7};
 int main(int argc, char **argv)
 {
     int fd, num, i;
-    
+    int button_fd;
+    unsigned char bytedata[9]={0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF};
+	unsigned char ret;
+    unsigned char buf[9];
 
-    if(argc <=1){
-        fprintf(stderr, PROGRAM_USAGE_STRING, argv[0]);
-        return -1;
-    }
 
-    num = (int) strtol(argv[1], NULL, 10);
-    if(num<0||num>9){
-        fprintf(stderr, PROGRAM_USAGE_STRING,argv[0]);
-        return -1;
-    }
+    button_fd = open("/dev/pbutton", O_RDWR);
+	if(button_fd<0){
+		printf("Device open error : /dev/pbutton\n");
+		return -1;
+	}
 
     fd = open("/dev/midterm_dotmatrix",O_WRONLY);
     printf("input value : %d\n",num);
+
+
     if(fd!=-1){
 
-        //ioctl(fd,DOTM_SET_ALL,NULL);
-        //usleep(500000);
-        ioctl(fd, DOTM_SET_CLEAR,NULL);
-        usleep(500000);
-        switch (num){
-        case 0:
-            ioctl(fd,DOTM_SET_ONE,NULL);
-            break;
-        case 1:
-            ioctl(fd,DOTM_SET_TWO,NULL);
-            break;
-        case 2:
-            ioctl(fd,DOTM_SET_THREE,NULL);
-            break;
-        case 3:
-            print_name(&fd);
-            break;
-        case 4:
-            print_id(&fd);
-            break;
-        case 5:
-            ioctl(fd,DOTM_SET_SIX,NULL);
-            break;
+        while(1){
+            ret = read(button_fd,&bytedata,9);
+            if(ret<0){
+                printf("Read Error!\n");
+                return -1;
+            }
+            printf("Current PBUTTON Value: ");
+            for(i=0; i<9;i++)
+            {
+                printf("0x%x ",bytedata[i]);
+            }
+            printf("\n");
 
-        case 6:
-            ioctl(fd,DOTM_SET_SEVEN,NULL);
-            break;
+            ioctl(fd, DOTM_SET_CLEAR,NULL);
+            if(bytedata[0] == 1 )   ioctl(fd,DOTM_SET_ONE,NULL);
+            else if(bytedata[1] == 1 )   ioctl(fd,DOTM_SET_TWO,NULL);
+            else if(bytedata[2] == 1 )   ioctl(fd,DOTM_SET_THREE,NULL);
+            else if(bytedata[3] == 1 )   print_name(&fd);
+            else if(bytedata[4] == 1 )   print_id(&fd);
+            else if(bytedata[5] == 1 )   ioctl(fd,DOTM_SET_SIX,NULL);
+            else if(bytedata[6] == 1 )   ioctl(fd,DOTM_SET_SEVEN,NULL);
+            else if(bytedata[7] == 1 )   ioctl(fd,DOTM_SET_EIGHT,NULL);
+            else if(bytedata[8] == 1 )   ioctl(fd,DOTM_SET_NINE,NULL);
+            ioctl(fd, DOTM_SET_CLEAR,NULL);
+            
 
-        case 7:
-            ioctl(fd,DOTM_SET_EIGHT,NULL);
-            break;
-
-        case 8:
-            ioctl(fd,DOTM_SET_NINE,NULL);
-            break;
-        default:
-            break;
         }
-
-        usleep(500000);
-        ioctl(fd, DOTM_SET_CLEAR,NULL);
-        usleep(500000);
         
+        
+        close(button_fd);
         close(fd);
     } else {
             fprintf(stderr, "error opening device\n");
