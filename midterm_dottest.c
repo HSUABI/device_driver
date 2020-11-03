@@ -49,7 +49,9 @@ int main(int argc, char **argv)
         case 0:
             ioctl(fd,DOTM_SET_ONE,NULL);
             break;
-        
+        case 1:
+            ioctl(fd,DOTM_SET_TWO,NULL);
+            break;
         default:
             break;
         }
